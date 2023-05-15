@@ -1,5 +1,8 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import onlyAuth from 'middlewares/onlyAuth';
 
-export default function handler(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
+const helloApi = async (req, res) => {
+  res.statusCode = 200;
+  res.json({ user: req.currentUser });
+};
+
+export default onlyAuth(helloApi);

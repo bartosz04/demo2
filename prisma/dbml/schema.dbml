@@ -1,0 +1,133 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Account {
+  id Int [pk, increment]
+  compoundId String [unique, not null]
+  userId Int [not null]
+  providerType String [not null]
+  providerId String [not null]
+  providerAccountId String [not null]
+  refreshToken String
+  accessToken String
+  accessTokenExpires DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table Session {
+  id Int [pk, increment]
+  userId Int [not null]
+  expires DateTime [not null]
+  sessionToken String [unique, not null]
+  accessToken String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  name String
+  email String [unique]
+  emailVerified DateTime
+  image String
+  skill String
+  timezone String
+  biogram String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  profilesChecked ProfileCheck [not null]
+  targetChecks ProfileCheck [not null]
+  filter Filter
+  ConversationUser ConversationUser [not null]
+  ConversationMessage ConversationMessage [not null]
+}
+
+Table Filter {
+  id Int [pk, increment]
+  skill String
+  timezone String
+  user User [not null]
+  userId Int [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table ProfileCheck {
+  id Int [pk, increment]
+  user User [not null]
+  userId Int [not null]
+  targetUser User [not null]
+  targetId Int [not null]
+  liked Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table Conversation {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  users ConversationUser [not null]
+  messages ConversationMessage [not null]
+}
+
+Table ConversationUser {
+  id Int [pk, increment]
+  conversation Conversation [not null]
+  conversationId Int [not null]
+  read Boolean [not null, default: false]
+  user User [not null]
+  userId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table ConversationMessage {
+  id Int [pk, increment]
+  content String [not null]
+  conversation Conversation [not null]
+  conversationId Int [not null]
+  user User [not null]
+  userId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table VerificationRequest {
+  id Int [pk, increment]
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table Skill {
+  id Int [pk, increment]
+  name String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Table Timezone {
+  id Int [pk, increment]
+  name String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Ref: Filter.userId - User.id
+
+Ref: ProfileCheck.userId > User.id
+
+Ref: ProfileCheck.targetId > User.id
+
+Ref: ConversationUser.conversationId > Conversation.id
+
+Ref: ConversationUser.userId > User.id
+
+Ref: ConversationMessage.conversationId > Conversation.id
+
+Ref: ConversationMessage.userId > User.id
